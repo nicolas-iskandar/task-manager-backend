@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dtos.TaskDTO;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mappings.TaskMapper;
 import com.example.demo.models.Task;
 import com.example.demo.repo.TasksRepo;
@@ -19,15 +20,12 @@ public class TasksService {
 		this.mapper = mapper;
 	}
 
-	public Task getTaskById(int id) {
-		Task task = repo.findById(id).orElse(null);
-		if (task == null)
-			return null;
-		return task;
-	}
-
 	public List<Task> getTasks() {
 		return repo.findAll();
+	}
+
+	public Task getTaskById(int id) {
+		return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 	}
 
 	public Task createTask(TaskDTO taskDTO) {
@@ -35,18 +33,17 @@ public class TasksService {
 		return repo.save(task);
 	}
 
-	public TaskDTO updateTask(int id, TaskDTO updatedTask) {
-		Task task = mapper.taskDTOToTask(updatedTask);
-		task.setId(id);
-		return mapper.taskToTaskDTO(repo.save(task));
+	public TaskDTO updateTask(int id, TaskDTO updatedTaskDTO) {
+		Task existingTask = repo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
+		Task updatedTask = mapper.taskDTOToTask(updatedTaskDTO);
+		updatedTask.setId(id);
+		return mapper.taskToTaskDTO(repo.save(updatedTask));
 	}
 
-	public Task deleteTask(int id) {
-		Task task = repo.findById(id).orElse(null);
-		if (task == null)
-			return null;
-
-		repo.deleteById(id);
-		return task;
+	public void deleteTask(int id) {
+		Task task = repo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
+		repo.delete(task);
 	}
 }

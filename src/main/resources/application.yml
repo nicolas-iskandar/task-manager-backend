@@ -19,3 +19,6 @@ spring:
     password: 3xp3r13nc3
     baseline-description: "init"
     baseline-version: 0
+  web:
+    resources:
+      add-mappings: false

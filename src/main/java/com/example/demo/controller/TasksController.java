@@ -33,10 +33,7 @@ public class TasksController {
 
 	@GetMapping("{id}")
 	public ResponseEntity<Task> getTaskById(@PathVariable Integer id) {
-		Task task = service.getTaskById(id);
-		if (task == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(task, HttpStatus.OK);
+		return ResponseEntity.ok(service.getTaskById(id));
 	}
 
 	@PostMapping
@@ -46,18 +43,12 @@ public class TasksController {
 
 	@PutMapping("{id}")
 	public ResponseEntity<TaskDTO> updateTask(@PathVariable Integer id, @RequestBody TaskDTO updatedTask) {
-		Task task = service.getTaskById(id);
-		if (task == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(service.updateTask(id, updatedTask), HttpStatus.OK);
+		return ResponseEntity.ok(service.updateTask(id, updatedTask));
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<TaskDTO> deleteTask(@PathVariable Integer id) {
-		Task task = service.getTaskById(id);
-		if (task == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
 		service.deleteTask(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return ResponseEntity.noContent().build();
 	}
 }

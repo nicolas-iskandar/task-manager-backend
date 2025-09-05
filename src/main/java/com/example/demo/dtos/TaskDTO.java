@@ -1,19 +1,12 @@
 package com.example.demo.dtos;
 
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Data
+@Builder
 public class TaskDTO {
 	@Column(nullable = false)
 	private String description;

@@ -34,8 +34,7 @@ public class TasksService {
 	}
 
 	public TaskDTO updateTask(int id, TaskDTO updatedTaskDTO) {
-		Task existingTask = repo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
+		repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 		Task updatedTask = mapper.taskDTOToTask(updatedTaskDTO);
 		updatedTask.setId(id);
 		return mapper.taskToTaskDTO(repo.save(updatedTask));

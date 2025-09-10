@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,5 +45,17 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.error", CoreMatchers.is("Not Found")))
                 .andExpect(jsonPath("$.message",
                         CoreMatchers.is("The requested URL was not found on this server")));
+    }
+
+    @Test
+    void itShouldHandleValidationException() throws Exception {
+        mockMvc.perform(post("/tasks")
+                        .contentType("application/json")
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", CoreMatchers.is(400)))
+                .andExpect(jsonPath("$.error", CoreMatchers.is("Validation failed")))
+                .andExpect(jsonPath("$.message",
+                        CoreMatchers.containsString("description must not be blank")));
     }
 }
